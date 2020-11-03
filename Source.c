@@ -1,4 +1,26 @@
 #include <stdio.h>
+int count_length(char* str)
+{
+	int length = 0;
+	for (int i = 0; str[i] != '\0'; i++) length++;
+	if (str[length - 1] == '\n')
+	{
+		str[length - 1] = '\0';
+		length--;
+	}
+	return length;
+}
+
+char change_word(int poz, int length, char* str1, char* str3)
+{
+	for (int i = 0; i < length; i++)
+	{
+		str1[poz + i] = str3[i];
+	}
+	return str1;
+}
+
+
 
 int main()
 {
@@ -16,57 +38,26 @@ int main()
 	fgets(str3, 100, stdin);
 
 
-
-	int length1 = 0;
-	int length2 = 0;
-	int length3 = 0;
-
-	for (int i = 0; str2[i] != '\0'; i++) length2++;
-	for (int i = 0; str3[i] != '\0'; i++) length3++;
-
-	if (str2[length2 - 1] == '\n')
-	{
-		str2[length2 - 1] = '\0';
-		length2--;
-	}
-
-
-
-
-
-	if (str3[length3 - 1] == '\n')
-	{
-		str3[length3 - 1] = '\0';
-		length3--;
-	}
-
+	int length2 = count_length(str2);
+	int length3 = count_length(str3);
 
 
 	int flag, poz;
 	int x = 0;
 	while (str1[x] != '\0')
 	{
+		int length1 = count_length(str1);
 
-		length1 = 0;
-		for (int i = 0; str1[i] != '\0'; i++) length1++;
-		if (str1[length1 - 1] == '\n')
-		{
-			str1[length1 - 1] = '\0';
-			length1--;
-		}
-
-
-
-		for (int j = 0; str1[j]!='\0'; j++)
+		for (int j = 0; str1[j]; j++)
 		{
 			flag = 1;
-			for (int i = 0; i < length2; i++)
+			for (int i = 0; i < length2; i++) //нахождение подстроки
 			{
 				if (str1[j + i] != str2[i])
 					flag = 0;
 			}
 
-			if (flag == 1)
+			if (flag == 1) //проверка на то,является ли подстрока словом
 			{
 				if ((j != 0 && ((str1[j - 1] >= 'A') && (str1[j - 1] <= 'Z')) || ((str1[j - 1] >= 'a') && (str1[j - 1] <= 'z'))) || (((str1[j + length2] >= 'A') && (str1[j + length2] <= 'Z')) || ((str1[j + length2] >= 'a') && (str1[j + length2] <= 'z'))))
 				{
@@ -74,63 +65,50 @@ int main()
 				}
 				else
 				{
-
-					flag = 1;
-					poz = j; //poz-позиция,откуда начинается подстрока
+					poz = j;
 					break;
 				}
 			}
 
 		}
 
-
-
-
-
-
 		if (flag == 1)
 		{
-			int poz2 = poz + length2; //poz2-позиция,где заканчивается подстрока (+1)
 
-			if (length2 == length3)
-			{
-				for (int i = 0; i < length3; i++)
-					str1[poz + i] = str3[i];
-			}
+			if (length2 == length3) change_word(poz, length3, str1, str3);
+
 			else
 			{
+				int end_word = poz + length2;
+
 				if (length2 > length3)
 				{
 					int na_sk = length2 - length3;
 
-					for (int i = 0; str1[poz2 + i - 1]!='\0'; i++)
+					for (int i = 0; str1[end_word + i - 1] != '\0'; i++)
 					{
-						str1[poz2 - na_sk + i] = str1[poz2 + i];
+						str1[end_word - na_sk + i] = str1[end_word + i]; //сужение строки
 					}
 
-					for (int i = 0; i < length3; i++)
-					{
-						str1[poz + i] = str3[i];
-					}
+					change_word(poz, length3, str1, str3);
+
 				}
-				else
+				if (length2 < length3)
 				{
 
 					int na_sk = length3 - length2;
-					int size_sdvig = length1 - poz2;/// size_sdvig-сколько символов нужно сдвинуть 
+					int size_of_sdvig = length1 - end_word; //сколько символов нужно сдвинуть
 
-					for (int i = 0; i <= size_sdvig; i++)
+					for (int i = 0; i <= size_of_sdvig; i++)
 					{
-						str1[length1 + na_sk - i] = str1[length1 - i];
+						str1[length1 + na_sk - i] = str1[length1 - i];//расширение строки
 					}
 
+					change_word(poz, length3, str1, str3);
 
-					for (int i = 0; i < length3; i++)
-						str1[poz + i] = str3[i];
 				}
 			}
 		}
-
 
 		x++;
 	}
