@@ -1,8 +1,16 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
+
+int my_isalpha(char ch)
+{
+	if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) return 1;
+	else  return 0;
+}
+
 int count_length(char* str)
 {
 	int length = 0;
 	for (int i = 0; str[i] != '\0'; i++) length++;
+
 	if (str[length - 1] == '\n')
 	{
 		str[length - 1] = '\0';
@@ -11,35 +19,57 @@ int count_length(char* str)
 	return length;
 }
 
-char change_word(int poz, int length, char* str1, char* str3)
+void change_word(int poz, int length, char* str1, char* str3)
 {
 	for (int i = 0; i < length; i++)
-	{
 		str1[poz + i] = str3[i];
-	}
-	return str1;
 }
 
+int isword(char* str)
+{
+	for (int i = 0; str[i] != '\0' && str[i] != '\n'; i++)
+		if (my_isalpha(str[i]) == 0) return 0;
+	return 1;
+}
 
 
 int main()
 {
-	char str1[100];
+	char str1[1000];
+	char str2[1000];
+	char str3[1000];
+
+	int length2;
+	int length3;
+
 
 	printf("Input string:\n");
-	fgets(str1, 100, stdin);
+	fgets(str1, 1000, stdin);
 
-	char str2[100];
-	printf("Input word that we should change:");
-	fgets(str2, 100, stdin);
+	
+    printf("Input word that we should change:");
+	fgets(str2, 1000, stdin);
+	if (isword(str2) == 0)
+	{
+		printf("Incorrect input.You should type a word");
+		return 0;
+	}
+		
+	
 
-	char str3[100];
+
 	printf("Transform this word to ");
-	fgets(str3, 100, stdin);
+	fgets(str3, 1000, stdin);
+	if (isword(str3) == 0)
+	{
+		printf("Incorrect input.You should type a word");
+		return 0;
+	}
+	
 
 
-	int length2 = count_length(str2);
-	int length3 = count_length(str3);
+	length2 = count_length(str2);
+	length3 = count_length(str3);
 
 
 	int flag, poz;
@@ -51,15 +81,15 @@ int main()
 		for (int j = 0; str1[j]; j++)
 		{
 			flag = 1;
-			for (int i = 0; i < length2; i++) //íàõîæäåíèå ïîäñòðîêè
+			for (int i = 0; i < length2; i++) //Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ðµ Ð¿Ð¾Ð´ÑÑ‚Ñ€Ð¾ÐºÐ¸
 			{
 				if (str1[j + i] != str2[i])
 					flag = 0;
 			}
 
-			if (flag == 1) //ïðîâåðêà íà òî,ÿâëÿåòñÿ ëè ïîäñòðîêà ñëîâîì
+			if (flag == 1) //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ñ‚Ð¾,ÑÐ²Ð»ÑÐµÑ‚ÑÑ Ð»Ð¸ Ð¿Ð¾Ð´ÑÑ‚Ñ€Ð¾ÐºÐ° ÑÐ»Ð¾Ð²Ð¾Ð¼
 			{
-				if ((j != 0 && ((str1[j - 1] >= 'A') && (str1[j - 1] <= 'Z')) || ((str1[j - 1] >= 'a') && (str1[j - 1] <= 'z'))) || (((str1[j + length2] >= 'A') && (str1[j + length2] <= 'Z')) || ((str1[j + length2] >= 'a') && (str1[j + length2] <= 'z'))))
+				if ((j != 0 && my_isalpha(str1[j - 1]) || my_isalpha(str1[j + length2])))
 				{
 					flag = 0;
 				}
@@ -74,7 +104,6 @@ int main()
 
 		if (flag == 1)
 		{
-
 			if (length2 == length3) change_word(poz, length3, str1, str3);
 
 			else
@@ -87,7 +116,7 @@ int main()
 
 					for (int i = 0; str1[end_word + i - 1] != '\0'; i++)
 					{
-						str1[end_word - na_sk + i] = str1[end_word + i]; //ñóæåíèå ñòðîêè
+						str1[end_word - na_sk + i] = str1[end_word + i]; //ÑÑƒÐ¶ÐµÐ½Ð¸Ðµ ÑÑ‚Ñ€Ð¾ÐºÐ¸
 					}
 
 					change_word(poz, length3, str1, str3);
@@ -97,11 +126,11 @@ int main()
 				{
 
 					int na_sk = length3 - length2;
-					int size_of_sdvig = length1 - end_word; //ñêîëüêî ñèìâîëîâ íóæíî ñäâèíóòü
+					int size_of_sdvig = length1 - end_word; //ÑÐºÐ¾Ð»ÑŒÐºÐ¾ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð² Ð½ÑƒÐ¶Ð½Ð¾ ÑÐ´Ð²Ð¸Ð½ÑƒÑ‚ÑŒ
 
 					for (int i = 0; i <= size_of_sdvig; i++)
 					{
-						str1[length1 + na_sk - i] = str1[length1 - i];//ðàñøèðåíèå ñòðîêè
+						str1[length1 + na_sk - i] = str1[length1 - i];//Ñ€Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ðµ ÑÑ‚Ñ€Ð¾ÐºÐ¸
 					}
 
 					change_word(poz, length3, str1, str3);
