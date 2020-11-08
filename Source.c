@@ -31,6 +31,12 @@ int isword(char* str)
 		if (my_isalpha(str[i]) == 0) return 0;
 	return 1;
 }
+char regist (char* ch)
+{
+	if (ch >= 'A' && ch <= 'Z') return ch + 'a' - 'A';
+	else                        return ch;
+	
+}
 
 
 int main()
@@ -46,16 +52,16 @@ int main()
 	printf("Input string:\n");
 	fgets(str1, 1000, stdin);
 
-	
-    printf("Input word that we should change:");
+
+	printf("Input word that we should change:");
 	fgets(str2, 1000, stdin);
 	if (isword(str2) == 0)
 	{
 		printf("Incorrect input.You should type a word");
 		return 0;
 	}
-		
-	
+
+
 
 
 	printf("Transform this word to ");
@@ -65,7 +71,7 @@ int main()
 		printf("Incorrect input.You should type a word");
 		return 0;
 	}
-	
+
 
 
 	length2 = count_length(str2);
@@ -77,13 +83,18 @@ int main()
 	while (str1[x] != '\0')
 	{
 		int length1 = count_length(str1);
+		if (length1 == 0)
+		{
+			printf("You did not type anything\n");
+			return 0;
+		}
 
 		for (int j = 0; str1[j]; j++)
 		{
 			flag = 1;
 			for (int i = 0; i < length2; i++) //нахождение подстроки
 			{
-				if (str1[j + i] != str2[i])
+				if (regist(str1[j + i]) != regist(str2[i]))
 					flag = 0;
 			}
 
@@ -132,6 +143,8 @@ int main()
 					{
 						str1[length1 + na_sk - i] = str1[length1 - i];//расширение строки
 					}
+					
+
 
 					change_word(poz, length3, str1, str3);
 
